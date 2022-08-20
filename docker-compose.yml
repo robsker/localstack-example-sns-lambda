@@ -1,0 +1,32 @@
+version: '3.8'
+
+services:
+  localstack:
+    #image: localstack/localstack
+    network_mode: bridge
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: localstack-pki-poc
+    hostname: localstack
+    ports:
+      - "4566:4566"
+    environment:
+      # Declare which aws services will be used in localstack
+      - SERVICES=sqs,sns,iam,s3,lambda
+      - DEBUG=0
+      # These variables are needed for localstack
+      - AWS_DEFAULT_REGION=us-east-1
+      - AWS_ACCESS_KEY_ID=testUser
+      - AWS_SECRET_ACCESS_KEY=testAccessKey
+      # LAMBDA_EXECUTOR options:
+      #   local - runs the lambda in the current LocalStack container
+      #   docker - (default) creates a new lambda container, everytime the lambda is invoked
+      #   docker-reuse - creates a new lambda container that stays open for future lambda invocations
+      - LAMBDA_EXECUTOR=local
+      - DOCKER_HOST=unix:///var/run/docker.sock
+      - DATA_DIR=/tmp/localstack/data
+    volumes:
+      - "${TMPDIR:-/tmp}/localstack:/tmp/localstack"
+      - /var/run/docker.sock:/var/run/docker.sock
+      - ./create-resources.sh:/docker-entrypoint-initaws.d/create-resources.sh
