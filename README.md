@@ -36,10 +36,16 @@ docker-compose down
 
 ## SNS
 ```
-awslocal sns publish --topic-arn arn:aws:sns:us-east-1:000000000000:testTopic --region us-east-1 --message 'Test Topic!'
+awslocal sns publish \
+  --topic-arn arn:aws:sns:us-east-1:000000000000:testTopic \
+  --region us-east-1 \
+  --message 'Test Topic!'
 ```
 
 ## SQS
 ```
-awslocal sqs send-message --queue-url http://localhost:4576/000000000000/testQueue --region us-east-1 --message-body 'Test Message!'
+awslocal sqs send-message \
+  --queue-url http://localhost:4576/000000000000/testQueue \
+  --region us-east-1 \
+  --message-body 'Test Message!'
 ```
